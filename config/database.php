@@ -1,25 +1,17 @@
 <?php
+class Database
+{
+    private string $host = 'localhost';
+    private string $db   = 'db_film';
+    private string $user = 'root';
+    private string $pass = '';
 
-class Database {
-    private $host = "localhost";
-    private $user = "root";
-    private $pass = "";
-    private $db   = "db_film";
-    private $conn;
-
-    public function __construct() {
-        // Melakukan koneksi ke database MySQL
-        $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db);
-
-        // Cek koneksi
-        if (!$this->conn) {
-            die("Koneksi database gagal: " . mysqli_connect_error());
-        }
-    }
-
-    // Mengembalikan objek koneksi agar bisa digunakan oleh Model
-    public function getConnection() {
-        return $this->conn;
+    public function connect(): PDO
+    {
+        $dsn = "mysql:host={$this->host};dbname={$this->db};charset=utf8mb4";
+        return new PDO($dsn, $this->user, $this->pass, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
     }
 }
-?>

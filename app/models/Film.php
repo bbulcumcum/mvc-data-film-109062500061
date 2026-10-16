@@ -1,53 +1,59 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+class Film
+{
+    public function __construct(private PDO $db) {}
 
-class Film {
-    private $db;
-    private $conn;
-
-    public function __construct() {
-        $this->db = new Database();
-        $this->conn = $this->db->getConnection();
+    public function getAll(): array
+    {
+        $stmt = $this->db->query(
+            'SELECT id, judul, genre, sutradara, tahun_rilis, rating FROM film ORDER BY judul'
+        );
+        return $stmt->fetchAll();
     }
 
-    public function getAllFilm() {
-        $result = mysqli_query($this->conn, "SELECT * FROM film");
-        $rows = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $rows[] = $row;
-        }
-        return $rows;
+    public function findById(int $id): array|false
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, judul, genre, sutradara, tahun_rilis, rating FROM film WHERE id = :id'
+        );
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
     }
 
-    public function getFilmById($id) {
-        $result = mysqli_query($this->conn, "SELECT * FROM film WHERE id = $id");
-        return mysqli_fetch_assoc($result);
+    public function insert(array $data): bool
+    {
+        $sql = 'INSERT INTO film (judul, genre, sutradara, tahun_rilis, rating)
+                VALUES (:judul, :genre, :sutradara, :tahun_rilis, :rating)';
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':judul'       => $data['judul'],
+            ':genre'       => $data['genre'],
+            ':sutradara'   => $data['sutradara'],
+            ':tahun_rilis' => $data['tahun_rilis'],
+            ':rating'      => $data['rating']
+        ]);
     }
 
-    public function tambahDataFilm($data) {
-        $nama  = htmlspecialchars($data['nama']);
-        $genre = htmlspecialchars($data['genre']);
-
-        $query = "INSERT INTO film (nama, genre) VALUES ('$nama', '$genre')";
-        mysqli_query($this->conn, $query);
-
-        return mysqli_affected_rows($this->conn);
+    public function update(int $id, array $data): bool
+    {
+        $sql = 'UPDATE film
+                SET judul = :judul, genre = :genre, sutradara = :sutradara,
+                    tahun_rilis = :tahun_rilis, rating = :rating
+                WHERE id = :id';
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':id'          => $id,
+            ':judul'       => $data['judul'],
+            ':genre'       => $data['genre'],
+            ':sutradara'   => $data['sutradara'],
+            ':tahun_rilis' => $data['tahun_rilis'],
+            ':rating'      => $data['rating']
+        ]);
     }
 
-    public function ubahDataFilm($data) {
-        $id    = $data['id'];
-        $nama  = htmlspecialchars($data['nama']);
-        $genre = htmlspecialchars($data['genre']);
-
-        $query = "UPDATE film SET nama = '$nama', genre = '$genre' WHERE id = $id";
-        mysqli_query($this->conn, $query);
-
-        return mysqli_affected_rows($this->conn);
-    }
-
-    public function hapusDataFilm($id) {
-        mysqli_query($this->conn, "DELETE FROM film WHERE id = $id");
-        return mysqli_affected_rows($this->conn);
+    public function delete(int $id): bool
+    {
+        $stmt = $this->db->prepare('DELETE FROM film WHERE id = :id');
+        return $stmt->execute([':id' => $id]);
     }
 }
-?>
