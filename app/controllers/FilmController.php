@@ -1,70 +1,57 @@
 <?php
-class FilmController
-{
-    public function __construct(private Film $model) {}
+// Koneksi database
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "db_film";
 
-    public function index(): void
-    {
-        $films = $this->model->getAll();
-        require __DIR__ . '/../views/film/index.php';
+$koneksi = mysqli_connect($host, $user, $pass, $db);
+
+if (!$koneksi) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
+}
+
+// Fungsi untuk mengambil semua data film (Read)
+function query($query_string) {
+    global $koneksi;
+    $result = mysqli_query($koneksi, $query_string);
+    $rows = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $rows[] = $row;
     }
+    return $rows;
+}
 
-    public function create(): void
-    {
-        require __DIR__ . '/../views/film/create.php';
-    }
+// Fungsi Tambah Data (Create)
+function tambah($data) {
+    global $koneksi;
+    // Variabel PHP tanpa spasi, mengambil data dari form input name="NamaFilm" dan name="GenreFilm"
+    $NamaFilm  = htmlspecialchars($data['NamaFilm']);
+    $GenreFilm = htmlspecialchars($data['GenreFilm']);
 
-    public function store(): void
-    {
-        $data = $this->validateInput($_POST);
-        $this->model->insert($data);
-        header('Location: index.php?page=film');
-        exit;
-    }
+    $query = "INSERT INTO film (NamaFilm, GenreFilm) VALUES ('$NamaFilm', '$GenreFilm')";
+    mysqli_query($koneksi, $query);
 
-    public function edit(): void
-    {
-        $id = (int) ($_GET['id'] ?? 0);
-        $film = $this->model->findById($id);
-        if (!$film) {
-            http_response_code(404);
-            exit('Data film tidak ditemukan.');
-        }
-        require __DIR__ . '/../views/film/edit.php';
-    }
+    return mysqli_affected_rows($koneksi);
+}
 
-    public function update(): void
-    {
-        $id = (int) ($_POST['id'] ?? 0);
-        $data = $this->validateInput($_POST);
-        $this->model->update($id, $data);
-        header('Location: index.php?page=film');
-        exit;
-    }
+// Fungsi Ubah Data (Update)
+function ubah($data) {
+    global $koneksi;
+    $id    = $data['id'];
+    $NamaFilm= htmlspecialchars($data['NamaFilm']);
+    $GenreFilm = htmlspecialchars($data['GenreFilm']);
 
-    public function delete(): void
-    {
-        $id = (int) ($_POST['id'] ?? 0);
-        $this->model->delete($id);
-        header('Location: index.php?page=film');
-        exit;
-    }
+    $query = "UPDATE film SET NamaFilm = '$NamaFilm', GenreFilm = '$GenreFilm' WHERE id = $id";
+    mysqli_query($koneksi, $query);
 
-    private function validateInput(array $input): array
-    {
-        $data = [
-            'judul' => trim($input['judul'] ?? ''),
-            'sutradara' => trim($input['sutradara'] ?? ''),
-            'tahun' => (int) ($input['tahun'] ?? 0),
-            'genre' => trim($input['genre'] ?? ''),
-            'sinopsis' => trim($input['sinopsis'] ?? '')
-        ];
+    return mysqli_affected_rows($koneksi);
+}
 
-        if ($data['judul'] === '' || $data['sutradara'] === '' || $data['tahun'] <= 0 || $data['genre'] === '') {
-            exit('Judul, sutradara, tahun, dan genre wajib diisi dengan benar.');
-        }
-
-        return $data;
-    }
+// Fungsi Hapus Data (Delete)
+function hapus($id) {
+    global $koneksi;
+    mysqli_query($koneksi, "DELETE FROM film WHERE id = $id");
+    return mysqli_affected_rows($koneksi);
 }
 ?>
