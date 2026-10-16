@@ -1,30 +1,46 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Film.php';
-require_once __DIR__ . '/../app/controllers/FilmController.php';
-
-$db = (new Database())->connect();
-$model = new Film($db);
-$controller = new FilmController($model);
-
-$page = $_GET['page'] ?? 'film';
-$action = $_GET['action'] ?? 'index';
-
-if ($page !== 'film') {
-    http_response_code(404);
-    exit('Halaman tidak ditemukan.');
-}
-
-match ($action) {
-    'index' => $controller->index(),
-    'create' => $controller->create(),
-    'store' => $controller->store(),
-    'edit' => $controller->edit(),
-    'update' => $controller->update(),
-    'delete' => $controller->delete(),
-    default => (function () {
-        http_response_code(404);
-        exit('Action tidak ditemukan.');
-    })()
-};
+// Masukkan koneksi database di sini (Contoh: include 'koneksi.php');
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>CRUD Operation Using PHP & MySQL | Codehal - Index</title>
+   <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+   <div class="container">
+      <h2>Daftar Data</h2>
+      <a href="create.php" class="btn-add">Tambah Data Baru</a>
+      
+      <table>
+         <thead>
+            <tr>
+               <th>No</th>
+               <th>NamaFilm Film Film</th>
+               <th>GenreFilm Film Film</th>
+               <th>Aksi</th>
+            </tr>
+         </thead>
+         <tbody>
+            <!-- Contoh Looping Data dari Database -->
+            <?php 
+            // $query = mysqli_query($koneksi, "SELECT * FROM users");
+            // while($row = mysqli_fetch_assoc($query)) { 
+            ?>
+            <tr>
+               <td>1</td>
+               <td>Spidermen</td>
+               <td>Action</td>
+               <td>
+                  <a href="edit.php?id=1" class="btn-edit">Edit</a>
+                  <a href="delete.php?id=1" class="btn-delete" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+               </td>
+            </tr>
+            <?php // } ?>
+         </tbody>
+      </table>
+   </div>
+</body>
+</html>
