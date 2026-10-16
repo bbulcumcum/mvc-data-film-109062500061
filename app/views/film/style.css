@@ -1,0 +1,149 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
+
+body {
+background-color: #f4f7f6;
+color: #333;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+}
+
+.container {
+width: 100%;
+max-width: 800px;
+background: #ffffff;
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+margin-bottom: 20px;
+color: #2c3e50;
+font-weight: 600;
+border-bottom: 2px solid #eaeaea;
+padding-bottom: 10px;
+}
+
+/* Buttons Styling */
+a {
+text-decoration: none;
+}
+
+.btn-add, .btn-submit {
+display: inline-block;
+background-color: #4f46e5;
+color: #ffffff;
+padding: 10px 20px;
+border-radius: 6px;
+font-weight: 500;
+border: none;
+cursor: pointer;
+transition: background-color 0.2s ease;
+margin-bottom: 20px;
+}
+
+.btn-add:hover, .btn-submit:hover {
+background-color: #4338ca;
+}
+
+.btn-edit {
+background-color: #f59e0b;
+color: white;
+padding: 6px 12px;
+border-radius: 4px;
+font-size: 14px;
+margin-right: 5px;
+transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+background-color: #d97706;
+}
+
+.btn-delete {
+background-color: #ef4444;
+color: white;
+padding: 6px 12px;
+border-radius: 4px;
+font-size: 14px;
+transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+background-color: #dc2626;
+}
+
+.btn-back {
+display: inline-block;
+background-color: #6b7280;
+color: white;
+padding: 10px 20px;
+border-radius: 6px;
+margin-left: 10px;
+transition: background-color 0.2s;
+}
+
+.btn-back:hover {
+background-color: #4b5563;
+}
+
+/* Table Styling */
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+}
+
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+background-color: #f9fafb;
+color: #374151;
+font-weight: 600;
+}
+
+tr:hover {
+background-color: #f9fafb;
+}
+
+/* Form Styling */
+.form-group {
+margin-bottom: 20px;
+}
+
+.form-group label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: #374151;
+}
+
+.form-group input {
+width: 100%;
+padding: 10px 14px;
+border: 1px solid #d1d5db;
+border-radius: 6px;
+font-size: 15px;
+outline: none;
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+border-color: #4f46e5;
+box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
