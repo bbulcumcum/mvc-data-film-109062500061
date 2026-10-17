@@ -1,34 +1,44 @@
-<?php
-// Proses simpan data jika form disubmit
-if (isset($_POST['submit'])) {
-    // $NamaFilm Film = $_POST['NamaFilm Film'];
-    // $email = $_POST['email'];
-    // mysqli_query($koneksi, "INSERT INTO users (NamaFilm Film, email) VALUES ('$NamaFilm Film', '$email')");
-    // header("location: index.php");
-}
-?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>CRUD Operation Using PHP & MySQL | Codehal - Create</title>
+   <title>Tambah Film</title>
    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
    <div class="container">
-      <h2>Tambah Data Baru</h2>
-      <form action="" method="POST">
+      <h2>Tambah Film</h2>
+
+      <?php if ($flash): ?>
+         <div class="alert alert-<?= htmlspecialchars($flash['type']) ?>">
+            <?= htmlspecialchars($flash['message']) ?>
+         </div>
+      <?php endif; ?>
+
+      <form action="index.php?page=film&action=store" method="POST">
          <div class="form-group">
-            <label>NamaFilm Film Film:</label>
-            <input type="text" name="NamaFilm Film" required />
+            <label>Judul Film:</label>
+            <input type="text" name="judul" value="<?= htmlspecialchars($old['judul'] ?? '') ?>" required />
          </div>
          <div class="form-group">
-            <label>GenreFilm Film Film:</label>
-            <input type="email" name="email" required />
+            <label>Genre:</label>
+            <input type="text" name="genre" value="<?= htmlspecialchars($old['genre'] ?? '') ?>" required />
          </div>
-         <button type="submit" name="submit" class="btn-submit">Simpan</button>
-         <a href="index.php" class="btn-back">Kembali</a>
+         <div class="form-group">
+            <label>Sutradara:</label>
+            <input type="text" name="sutradara" value="<?= htmlspecialchars($old['sutradara'] ?? '') ?>" required />
+         </div>
+         <div class="form-group">
+            <label>Tahun Rilis:</label>
+            <input type="number" name="tahun_rilis" min="1888" max="2100" value="<?= htmlspecialchars($old['tahun_rilis'] ?? '') ?>" required />
+         </div>
+         <div class="form-group">
+            <label>Rating (0-10):</label>
+            <input type="number" name="rating" min="0" max="10" step="0.1" value="<?= htmlspecialchars($old['rating'] ?? '') ?>" required />
+         </div>
+         <button type="submit" class="btn-submit">Simpan</button>
+         <a href="index.php?page=film" class="btn-back">Kembali</a>
       </form>
    </div>
 </body>
