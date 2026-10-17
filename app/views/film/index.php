@@ -1,44 +1,58 @@
-<?php
-// Masukkan koneksi database di sini (Contoh: include 'koneksi.php');
-?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>CRUD Operation Using PHP & MySQL | Codehal - Index</title>
+   <title>Daftar Film</title>
    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
    <div class="container">
-      <h2>Daftar Data</h2>
-      <a href="create.php" class="btn-add">Tambah Data Baru</a>
-      
+      <h2>Daftar Film</h2>
+
+      <?php if ($flash): ?>
+         <div class="alert alert-<?= htmlspecialchars($flash['type']) ?>">
+            <?= htmlspecialchars($flash['message']) ?>
+         </div>
+      <?php endif; ?>
+
+      <a href="index.php?page=film&action=create" class="btn-add">Tambah Film</a>
+
       <table>
          <thead>
             <tr>
                <th>No</th>
-               <th>NamaFilm Film Film</th>
-               <th>GenreFilm Film Film</th>
+               <th>Judul</th>
+               <th>Genre</th>
+               <th>Sutradara</th>
+               <th>Tahun</th>
+               <th>Rating</th>
                <th>Aksi</th>
             </tr>
          </thead>
          <tbody>
-            <!-- Contoh Looping Data dari Database -->
-            <?php 
-            // $query = mysqli_query($koneksi, "SELECT * FROM users");
-            // while($row = mysqli_fetch_assoc($query)) { 
-            ?>
+            <?php if (empty($films)): ?>
+               <tr><td colspan="7">Belum ada data film.</td></tr>
+            <?php endif; ?>
+            <?php foreach ($films as $i => $f): ?>
             <tr>
-               <td>1</td>
-               <td>Spidermen</td>
-               <td>Action</td>
-               <td>
-                  <a href="edit.php?id=1" class="btn-edit">Edit</a>
-                  <a href="delete.php?id=1" class="btn-delete" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+               <td><?= $i + 1 ?></td>
+               <td><?= htmlspecialchars($f['judul']) ?></td>
+               <td><?= htmlspecialchars($f['genre']) ?></td>
+               <td><?= htmlspecialchars($f['sutradara']) ?></td>
+               <td><?= (int) $f['tahun_rilis'] ?></td>
+               <td><?= htmlspecialchars($f['rating']) ?></td>
+               <td class="aksi">
+                  <a href="index.php?page=film&action=edit&id=<?= (int) $f['id'] ?>" class="btn-edit">Edit</a>
+                  <form method="post" action="index.php?page=film&action=delete"
+                        style="display:inline"
+                        onsubmit="return confirm('Yakin ingin menghapus?')">
+                     <input type="hidden" name="id" value="<?= (int) $f['id'] ?>">
+                     <button type="submit" class="btn-delete">Hapus</button>
+                  </form>
                </td>
             </tr>
-            <?php // } ?>
+            <?php endforeach; ?>
          </tbody>
       </table>
    </div>
