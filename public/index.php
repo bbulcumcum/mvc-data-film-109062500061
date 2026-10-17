@@ -1,15 +1,37 @@
 <?php
-// public/index.php
+session_start();
 
-// Panggil Controller Film yang berada di folder app/controllers/
-require_once '../mvc-data-film/app/controllers/FilmController.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../app/models/Film.php';
+require __DIR__ . '/../app/controllers/FilmController.php';
 
-// Inisialisasi objek Controller
-$controller = new FilmController();
+try {
+    $db = (new Database())->connect();
+} catch (PDOException $e) {
+    http_response_code(500);
+    exit('Koneksi database gagal. Pastikan MySQL berjalan dan database db_film sudah diimpor.');
+}
 
-// Ambil data seluruh film melalui fungsi/metode di controller
-$films = $controller->index();
+$model      = new Film($db);
+$controller = new FilmController($model);
 
-// Muat tampilan (View) daftar film
-require_once '../app/views/film/index.php';
-?>
+$page   = $_GET['page'] ?? 'film';
+$action = $_GET['action'] ?? 'index';
+
+if ($page !== 'film') {
+    http_response_code(404);
+    exit('Halaman tidak ditemukan.');
+}
+
+match ($action) {
+    'index'  => $controller->index(),
+    'create' => $controller->create(),
+    'store'  => $controller->store(),
+    'edit'   => $controller->edit(),
+    'update' => $controller->update(),
+    'delete' => $controller->delete(),
+    default  => (function () {
+        http_response_code(404);
+        exit('Action tidak ditemukan.');
+    })()
+};
